@@ -11,7 +11,11 @@ class SumHandler implements RequestHandlerInterface
 {
 
     /**
-     * @inheritDoc
+     * returns sum of input param
+     *
+     * @param ServerRequestInterface $request
+     *
+     * @return ResponseInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
