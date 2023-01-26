@@ -41,4 +41,7 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/ping', App\Handler\PingHandler::class, 'api.ping');
     $app->get('/api/sum', App\Handler\SumHandler::class, 'sum');
+    $app->get('/api/token', App\Handler\WebhookTokenHandler::class, 'token');
+    $app->get('/api/user', App\Handler\UserNameHandler::class, 'user-name');
+    $app->get('/api/unisender', App\Handler\UnisenderAuthHandler::class, 'unisender');
 };

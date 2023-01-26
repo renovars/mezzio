@@ -11,8 +11,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class HomePageHandler implements RequestHandlerInterface
 {
-
-
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $target = $request->getQueryParams()['target'] ?? 'World';
@@ -21,6 +19,5 @@ class HomePageHandler implements RequestHandlerInterface
             '<h1>Hello %s</h1>',
             $target
         ));
-
     }
 }

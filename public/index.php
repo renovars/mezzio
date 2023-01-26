@@ -14,6 +14,8 @@ require 'vendor/autoload.php';
  * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
  */
 (function () {
+    session_start();
+
     /** @var \Psr\Container\ContainerInterface $container */
     $container = require 'config/container.php';
 

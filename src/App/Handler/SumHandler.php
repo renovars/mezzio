@@ -9,7 +9,6 @@ use Psr\Http\Server\RequestHandlerInterface;
 
 class SumHandler implements RequestHandlerInterface
 {
-
     /**
      * returns sum of input param
      *
