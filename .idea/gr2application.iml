@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/App" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/test/AppTest" isTestSource="true" packagePrefix="AppTest\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mezzio/mezzio" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/fast-route" />
@@ -98,6 +99,19 @@
       <excludeFolder url="file://$MODULE_DIR$/vendor/paragonie/random_compat" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/brick/math" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nesbot/carbon" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/filesystem" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/symfony/config" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/davedevelopment/phpmig" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/psr/simple-cache" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/doctrine/inflector" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/collections" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/container" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/contracts" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/database" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/macroable" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/illuminate/support" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/voku/portable-ascii" />
+      <excludeFolder url="file://$MODULE_DIR$/vendor/pimple/pimple" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

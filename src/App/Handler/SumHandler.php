@@ -7,10 +7,13 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Хэндлер суммирования параметров
+ */
 class SumHandler implements RequestHandlerInterface
 {
     /**
-     * returns sum of input param
+     * Возвращает сумму GET параметров
      *
      * @param ServerRequestInterface $request
      *

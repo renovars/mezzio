@@ -10,6 +10,16 @@ if (PHP_SAPI === 'cli-server' && $_SERVER['SCRIPT_FILENAME'] !== __FILE__) {
 chdir(dirname(__DIR__));
 require 'vendor/autoload.php';
 
+use Illuminate\Database\Capsule\Manager;
+
+/** @var \Interop\Container\ContainerInterface $container */
+$container = require 'config/container.php';
+
+$capsule = new Manager();
+$capsule->addConnection($container->get('config')['eloquent']);
+$capsule->setAsGlobal();
+$capsule->bootEloquent();
+
 /**
  * Self-called anonymous function that creates its own scope and keeps the global namespace clean.
  */

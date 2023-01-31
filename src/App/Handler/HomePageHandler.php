@@ -9,8 +9,17 @@ use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
 
+/**
+ * Хэндлер домашней страницы
+ */
 class HomePageHandler implements RequestHandlerInterface
 {
+    /**
+     * Возвращает текст приветствия
+     *
+     * @param ServerRequestInterface $request
+     * @return ResponseInterface
+     */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
         $target = $request->getQueryParams()['target'] ?? 'World';
