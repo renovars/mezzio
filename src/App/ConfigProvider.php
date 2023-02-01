@@ -4,6 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Handler\HomePageHandler;
+use App\Handler\HomePageHandlerFactory;
+use App\Handler\SumHandler;
+use App\Handler\SyncHandler;
+use App\Handler\SyncHandlerFactory;
+use App\Handler\SafeKeyHandler;
+use App\Handler\SafeKeyHandlerFactory;
 use Whoops\Handler\Handler;
 
 /**
@@ -34,11 +41,12 @@ class ConfigProvider
     {
         return [
             'invokables' => [
-                Handler\SumHandler::class => Handler\SumHandler::class,
+                SumHandler::class => SumHandler::class,
+                SafeKeyHandler::class => SafeKeyHandler::class,
             ],
             'factories'  => [
-                Handler\HomePageHandler::class => Handler\HomePageHandlerFactory::class,
-                Handler\SyncHandler::class => Handler\SyncHandlerFactory::class
+                HomePageHandler::class => HomePageHandlerFactory::class,
+                SyncHandler::class => SyncHandlerFactory::class,
             ],
         ];
     }

@@ -6,6 +6,7 @@ namespace App\Handler;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use AmoCRM\Models\WebhookModel;
 use App\Helpers\SyncHelper;
 use App\Models\User;
 use Laminas\Diactoros\Response\HtmlResponse;
@@ -53,13 +54,17 @@ class SyncHandler implements RequestHandlerInterface
             $this->amoCrmUserData['clientSecret'],
             $this->amoCrmUserData['redirectUri']
         );
+
         $syncHelper = new SyncHelper($this->amoCrmUserData, $this->apikey);
 
         try {
-            $accessToken = (json_decode(User::where(
+            $accessToken = User::where(
                 'client_id',
                 $this->amoCrmUserData['clientId']
-            )->first()->access_token));
+            )->first()->access_token;
+            if (isset($accessToken)) {
+                $accessToken = json_decode($accessToken);
+            }
         } catch (\Exception $e) {
             $accessToken = null;
         }
@@ -74,6 +79,8 @@ class SyncHandler implements RequestHandlerInterface
                 'refresh_token' => $accessToken->refresh_token,
                 'expires' => $accessToken->expires,
             ]);
+
+            $apiClient->setAccessToken($accessToken);
 
             $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
             $syncHelper->sendToUnisender($contacts);
@@ -115,6 +122,7 @@ class SyncHandler implements RequestHandlerInterface
 
         $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
         $syncHelper->sendToUnisender($contacts);
+        $syncHelper->subscribe($apiClient);
 
         return new HtmlResponse(json_encode($contacts, JSON_UNESCAPED_UNICODE));
     }

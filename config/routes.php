@@ -41,4 +41,5 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/sum', App\Handler\SumHandler::class, 'sum');
     $app->get('/api/sync', App\Handler\SyncHandler::class, 'sync');
+    $app->any('/api/safekey', App\Handler\SafeKeyHandler::class, 'sync-webhooks');
 };

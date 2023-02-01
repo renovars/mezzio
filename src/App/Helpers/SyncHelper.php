@@ -5,6 +5,7 @@ namespace App\Helpers;
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMApiNoContentException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
+use AmoCRM\Models\WebhookModel;
 use App\Models\User;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Unisender\ApiWrapper\UnisenderApi;
@@ -19,7 +20,7 @@ class SyncHelper
     /**
      * @var array данные интеграции amoCRM
      */
-    private array $amoCrmUserData;
+    private ?array $amoCrmUserData;
 
     /**
      * @var string ключ Unisender
@@ -49,8 +50,7 @@ class SyncHelper
                 $this->deleteToken();
                 throw new \Exception('Вышел срок действия токена');
             }
-
-            $apiClient->setAccountBaseDomain($this->getBaseDomain())->setAccessToken($accessToken);
+            $apiClient->setAccountBaseDomain($this->getBaseDomain());
 
             $contacts = $apiClient->contacts()->get()->all();
 
@@ -75,7 +75,7 @@ class SyncHelper
             $this->deleteToken();
             die;
         } catch (\Exception $e) {
-            echo $e->getMessage();
+            echo 'Неизвестная ошибка';
             die;
         }
         return $contactsNameAndEmail;
@@ -93,21 +93,20 @@ class SyncHelper
      */
     public function saveUser(AccessTokenInterface $accessToken, AmoCRMApiClient $apiClient)
     {
-        try {
-            $user = User::where('client_id', $this->amoCrmUserData['clientId'])->first();
-            $user->access_token = json_encode($accessToken);
-            $user->save();
-        } catch (\Exception $e) {
-            $user = User::create([
-                'name' => $apiClient->users()->get()->all()[0]->name,
-                'base_domain' => $apiClient->getAccountBaseDomain(),
-                'client_id' => $this->amoCrmUserData['clientId'],
-                'client_secret' => $this->amoCrmUserData['clientSecret'],
-                'redirect_uri' => $this->amoCrmUserData['redirectUri'],
-                'access_token' => json_encode($accessToken),
-                'api_key' => $this->apiKey,
-            ]);
+        $user = User::where('account_id', $apiClient->account()->getCurrent()->getId())->first();
+        if (!isset($user)) {
+            $user = new User();
         }
+        $user->name          = $apiClient->users()->get()->all()[0]->name;
+        $user->base_domain   = $apiClient->getAccountBaseDomain();
+        $user->client_id     = $this->amoCrmUserData['clientId'];
+        $user->client_secret = $this->amoCrmUserData['clientSecret'];
+        $user->redirect_uri  = $this->amoCrmUserData['redirectUri'];
+        $user->access_token  = json_encode($accessToken);
+        $user->api_key       = $this->apiKey;
+        $user->account_id    = $apiClient->account()->getCurrent()->getId();
+
+        $user->save();
     }
 
     /**
@@ -149,5 +148,23 @@ class SyncHelper
     {
         $user = User::where('client_id', $this->amoCrmUserData['clientId'])->first();
         return $user->base_domain;
+    }
+
+    /**
+     * Добавляет подписку на webhooks для аккаунта
+     *
+     * @param AmoCRMApiClient $apiClient
+     * @return void
+     * @throws AmoCRMoAuthApiException
+     * @throws \AmoCRM\Exceptions\AmoCRMApiException
+     * @throws \AmoCRM\Exceptions\AmoCRMMissedTokenException
+     */
+    public function subscribe(AmoCRMApiClient $apiClient)
+    {
+        $webHookModel = (new WebhookModel())
+            ->setSettings(['add_contact', 'update_contact'])
+            ->setDestination('https://3990-173-233-147-68.eu.ngrok.io/api/webhooks');
+
+        $apiClient->webhooks()->subscribe($webHookModel);
     }
 }

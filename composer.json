@@ -56,14 +56,16 @@
         "mezzio/mezzio-fastroute": "^3.0.3",
         "mezzio/mezzio-helpers": "^5.7",
         "pimple/pimple": "^3.5",
-        "unisender/api-wrapper": "^1.6"
+        "unisender/api-wrapper": "^1.6",
+        "ext-json": "*"
     },
     "require-dev": {
+        "filp/whoops": "^2.7.1",
+        "laminas/laminas-cli": "^1.5",
         "laminas/laminas-development-mode": "^3.3.0",
         "mezzio/mezzio-tooling": "^2.1",
         "phpunit/phpunit": "^9.5.11",
         "roave/security-advisories": "dev-master",
-        "filp/whoops": "^2.7.1",
         "squizlabs/php_codesniffer": "3.*"
     },
     "autoload": {
