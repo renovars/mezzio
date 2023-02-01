@@ -10,8 +10,7 @@ use App\Handler\SumHandler;
 use App\Handler\SyncHandler;
 use App\Handler\SyncHandlerFactory;
 use App\Handler\SafeKeyHandler;
-use App\Handler\SafeKeyHandlerFactory;
-use Whoops\Handler\Handler;
+use App\Handler\WebhooksHandler;
 
 /**
  * The configuration provider for the App module
@@ -43,6 +42,7 @@ class ConfigProvider
             'invokables' => [
                 SumHandler::class => SumHandler::class,
                 SafeKeyHandler::class => SafeKeyHandler::class,
+                WebhooksHandler::class => WebhooksHandler::class,
             ],
             'factories'  => [
                 HomePageHandler::class => HomePageHandlerFactory::class,

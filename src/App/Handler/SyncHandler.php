@@ -6,7 +6,6 @@ namespace App\Handler;
 
 use AmoCRM\Client\AmoCRMApiClient;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
-use AmoCRM\Models\WebhookModel;
 use App\Helpers\SyncHelper;
 use App\Models\User;
 use Laminas\Diactoros\Response\HtmlResponse;
