@@ -23,9 +23,11 @@ class SafeKeyHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        //todo exception handling or error handling
+
         $accountId = $request->getParsedBody()['account_id'];
         $apiKey = $request->getParsedBody()['token'];
-
+        //todo exception handling exception + error or throwables 
         $user = User::where('account_id', $accountId)->first();
         if (isset($user)) {
             $user->api_key = $apiKey;
@@ -36,7 +38,7 @@ class SafeKeyHandler implements RequestHandlerInterface
             $user->account_id = $accountId;
             $user->save();
         }
-
+//todo first sync , connect to webhook
         return new HtmlResponse('');
     }
 }

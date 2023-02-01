@@ -10,7 +10,7 @@ use Psr\Container\ContainerInterface;
  * Создает SyncHandler
  */
 class SyncHandlerFactory
-{
+{//todo if we use some information for multiple times we can add them to the configurations file, and we can get to those information using the container interface
     /**
      * @var string API-ключ к вашему кабинету Unisender
      */

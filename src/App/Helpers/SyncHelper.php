@@ -69,6 +69,8 @@ class SyncHelper
             }
         } catch (AmoCRMApiNoContentException $e) {
             echo 'Нет контактов в amoCRM';
+            //todo return []
+            //todo hellper abstraction using throw exception 
             die;
         } catch (AmoCRMoAuthApiException $e) {
             echo 'Нужна повторная авторизация, обновите страницу';

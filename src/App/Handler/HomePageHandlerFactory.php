@@ -13,7 +13,10 @@ use Psr\Http\Server\RequestHandlerInterface;
 class HomePageHandlerFactory
 {
     public function __invoke(ContainerInterface $container): RequestHandlerInterface
-    {
+    {   echo "<pre>";
+        var_dump($container);
+        echo "</pre>";
+        exit();
         return new HomePageHandler();
     }
 }

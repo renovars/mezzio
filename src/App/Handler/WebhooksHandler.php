@@ -24,6 +24,7 @@ class WebhooksHandler implements RequestHandlerInterface
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
+        //todo check your data first
         $requestParams = $request->getParsedBody();
         $accountId = $requestParams['account']['id'];
         $apiKey = User::where('account_id', $accountId)->first()->api_key;
@@ -36,7 +37,7 @@ class WebhooksHandler implements RequestHandlerInterface
             'field_names' => ['email', 'Name'],
             'data' => [[$contactEmail, $contactName]],
         ];
-
+       //todo exception handling
         $uni = new UnisenderApi($apiKey);
         $unisenderResponse = $uni->importContacts($importParams);
 
