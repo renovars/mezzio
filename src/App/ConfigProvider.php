@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App;
 
+use App\Factory\HomePageHandlerFactory;
+use App\Factory\SafeKeyHandlerFactory;
+use App\Factory\SafeUserHandlerFactory;
 use App\Handler\HomePageHandler;
-use App\Handler\HomePageHandlerFactory;
-use App\Handler\SumHandler;
-use App\Handler\SyncHandler;
-use App\Handler\SyncHandlerFactory;
 use App\Handler\SafeKeyHandler;
+use App\Handler\SumHandler;
+use App\Handler\SafeUserHandler;
 use App\Handler\WebhooksHandler;
 
 /**
@@ -41,12 +42,12 @@ class ConfigProvider
         return [
             'invokables' => [
                 SumHandler::class => SumHandler::class,
-                SafeKeyHandler::class => SafeKeyHandler::class,
                 WebhooksHandler::class => WebhooksHandler::class,
             ],
             'factories'  => [
                 HomePageHandler::class => HomePageHandlerFactory::class,
-                SyncHandler::class => SyncHandlerFactory::class,
+                SafeKeyHandler::class => SafeKeyHandlerFactory::class,
+                SafeUserHandler::class => SafeUserHandlerFactory::class,
             ],
         ];
     }

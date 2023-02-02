@@ -7,6 +7,7 @@ use AmoCRM\Exceptions\AmoCRMApiNoContentException;
 use AmoCRM\Exceptions\AmoCRMoAuthApiException;
 use AmoCRM\Models\WebhookModel;
 use App\Models\User;
+use League\OAuth2\Client\Token\AccessToken;
 use League\OAuth2\Client\Token\AccessTokenInterface;
 use Unisender\ApiWrapper\UnisenderApi;
 
@@ -18,19 +19,36 @@ define('LOG_FILE', DIRECTORY_SEPARATOR . 'tmp' . DIRECTORY_SEPARATOR . 'log.txt'
 class SyncHelper
 {
     /**
-     * @var array данные интеграции amoCRM
+     * @var AmoCRMApiClient клиент amoCRM
      */
-    private ?array $amoCrmUserData;
+    private AmoCRMApiClient $apiClient;
 
     /**
      * @var string ключ Unisender
      */
-    private string $apiKey;
+    private ?string $apiKey;
 
-    public function __construct(array $amoCrmUserData, string $apiKey)
+    /**
+     * @var array данные интеграции amoCRM
+     */
+    private array $amoCrmUserData;
+
+    public function __construct(array $amoCrmUserData)
     {
         $this->amoCrmUserData = $amoCrmUserData;
-        $this->apiKey = $apiKey;
+        $this->apiClient = new AmoCRMApiClient(
+            $amoCrmUserData['clientId'],
+            $amoCrmUserData['clientSecret'],
+            $amoCrmUserData['redirectUri']
+        );
+        try {
+            $this->apiClient->setAccountBaseDomain($this->getBaseDomain())->setAccessToken($this->getAccessToken());
+        } catch (\Exception | \TypeError $e) {
+        }
+        $this->apiKey = User::where(
+            'client_id',
+            $this->amoCrmUserData['clientId']
+        )->first()->api_key;
     }
 
     /**
@@ -43,16 +61,16 @@ class SyncHelper
      * @throws \AmoCRM\Exceptions\AmoCRMMissedTokenException
      * @throws \AmoCRM\Exceptions\AmoCRMoAuthApiException
      */
-    public function getUserContacts(AccessTokenInterface $accessToken, AmoCRMApiClient $apiClient): array
+    public function getUserContacts(): array
     {
         try {
-            if ($accessToken->hasExpired()) {
+            if ($this->getAccessToken()->hasExpired()) {
                 $this->deleteToken();
                 throw new \Exception('Вышел срок действия токена');
             }
-            $apiClient->setAccountBaseDomain($this->getBaseDomain());
+            $this->apiClient->setAccountBaseDomain($this->getBaseDomain())->setAccessToken($this->getAccessToken());
 
-            $contacts = $apiClient->contacts()->get()->all();
+            $contacts = $this->apiClient->contacts()->get()->all();
 
             $contactsNameAndEmail = [];
             foreach ($contacts as $contact) {
@@ -68,17 +86,11 @@ class SyncHelper
                 }
             }
         } catch (AmoCRMApiNoContentException $e) {
-            echo 'Нет контактов в amoCRM';
-            //todo return []
-            //todo hellper abstraction using throw exception 
-            die;
+            return [];
         } catch (AmoCRMoAuthApiException $e) {
             echo 'Нужна повторная авторизация, обновите страницу';
             $this->deleteToken();
-            die;
-        } catch (\Exception $e) {
-            echo 'Неизвестная ошибка';
-            die;
+            return [];
         }
         return $contactsNameAndEmail;
     }
@@ -93,7 +105,7 @@ class SyncHelper
      * @throws \AmoCRM\Exceptions\AmoCRMApiException
      * @throws \AmoCRM\Exceptions\AmoCRMMissedTokenException
      */
-    public function saveUser(AccessTokenInterface $accessToken, AmoCRMApiClient $apiClient)
+    public function saveUser(AmoCRMApiClient $apiClient, AccessTokenInterface $accessToken)
     {
         $user = User::where('account_id', $apiClient->account()->getCurrent()->getId())->first();
         if (!isset($user)) {
@@ -146,10 +158,25 @@ class SyncHelper
      *
      * @return string
      */
-    public function getBaseDomain(): string
+    public function getBaseDomain(): ?string
     {
         $user = User::where('client_id', $this->amoCrmUserData['clientId'])->first();
         return $user->base_domain;
+    }
+
+    /**
+     * @return AccessTokenInterface
+     */
+    public function getAccessToken(): ?AccessTokenInterface
+    {
+        $user = User::where('client_id', $this->amoCrmUserData['clientId'])->first();
+        $accessToken = json_decode($user->access_token);
+
+            return new AccessToken([
+                'access_token' => $accessToken->access_token,
+                'refresh_token' => $accessToken->refresh_token,
+                'expires' => $accessToken->expires,
+            ]);
     }
 
     /**
@@ -161,12 +188,12 @@ class SyncHelper
      * @throws \AmoCRM\Exceptions\AmoCRMApiException
      * @throws \AmoCRM\Exceptions\AmoCRMMissedTokenException
      */
-    public function subscribe(AmoCRMApiClient $apiClient)
+    public function subscribe()
     {
         $webHookModel = (new WebhookModel())
             ->setSettings(['add_contact', 'update_contact'])
             ->setDestination('https://3990-173-233-147-68.eu.ngrok.io/api/webhooks');
 
-        $apiClient->webhooks()->subscribe($webHookModel);
+        $this->apiClient->webhooks()->subscribe($webHookModel);
     }
 }

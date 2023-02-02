@@ -4,8 +4,11 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Helpers\SyncHelper;
 use App\Models\User;
+use Illuminate\Database\QueryException;
 use Laminas\Diactoros\Response\HtmlResponse;
+use Laminas\Diactoros\Uri;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -16,29 +19,46 @@ use Psr\Http\Server\RequestHandlerInterface;
 class SafeKeyHandler implements RequestHandlerInterface
 {
     /**
-     * получает id аккаунта и ключ из запроса и сохраняет в БД
+     * @var array данные интеграции amoCRM
+     */
+    private array $amoCrmUserData;
+
+    public function __construct($amoCrmUserData)
+    {
+        $this->amoCrmUserData = $amoCrmUserData;
+    }
+
+    /**
+     * получает id аккаунта и ключ из запроса и сохраняет в БД,
+     * синхронизирует контакты из amoCRM в Unisender
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
-        //todo exception handling or error handling
+        try {
+            $accountId = $request->getParsedBody()['account_id'] ?? null;
+            $apiKey = $request->getParsedBody()['token'] ?? null;
+            $user = User::where('account_id', $accountId)->first();
+            if (isset($user)) {
+                $user->api_key = $apiKey;
+                $user->save();
 
-        $accountId = $request->getParsedBody()['account_id'];
-        $apiKey = $request->getParsedBody()['token'];
-        //todo exception handling exception + error or throwables 
-        $user = User::where('account_id', $accountId)->first();
-        if (isset($user)) {
-            $user->api_key = $apiKey;
-            $user->save();
-        } elseif (isset($accountId)) {
-            $user = new User();
-            $user->api_key = $apiKey;
-            $user->account_id = $accountId;
-            $user->save();
+                $syncHelper = new SyncHelper($this->amoCrmUserData);
+                $contacts = $syncHelper->getUserContacts();
+                $syncHelper->sendToUnisender($contacts);
+                $syncHelper->subscribe();
+            }
+        } catch (\InvalidArgumentException $e) {
+            throw new \Exception('Неверные аргументы');
+        } catch (QueryException $e) {
+            throw new \Exception('Нет доступа к базе');
+        } catch (\Exception | \TypeError $e) {
+            throw new \Exception('Неизвестная ошибка');
         }
-//todo first sync , connect to webhook
-        return new HtmlResponse('');
+
+        return new HtmlResponse(json_encode($user));
     }
 }

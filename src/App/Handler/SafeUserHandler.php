@@ -17,26 +17,19 @@ use Psr\Http\Server\RequestHandlerInterface;
 /**
  * Хэндлер для синхронизации контактов из amoCRM в Unisender
  */
-class SyncHandler implements RequestHandlerInterface
+class SafeUserHandler implements RequestHandlerInterface
 {
-    /**
-     * @var string API-ключ к вашему кабинету Unisender
-     */
-    private string $apikey;
-
     /**
      * @var array данные интеграции amoCRM
      */
     private array $amoCrmUserData;
 
-    public function __construct($amoCrmUserData, $apikey)
+    public function __construct($amoCrmUserData)
     {
         $this->amoCrmUserData = $amoCrmUserData;
-        $this->apikey         = $apikey;
     }
 
     /**
-     * Синхронизирует контакты и возвращает список контактов, которые были синхронизированы.
      * Проверяет наличие accessToken в БД по id интеграции, если токена нет, то открывается страница авторизации
      * после авторизации пользователь сохрнатеся в базу, либо обновлется accessToken, если пользователь существует
      *
@@ -54,13 +47,14 @@ class SyncHandler implements RequestHandlerInterface
             $this->amoCrmUserData['redirectUri']
         );
 
-        $syncHelper = new SyncHelper($this->amoCrmUserData, $this->apikey);
+        $syncHelper = new SyncHelper($this->amoCrmUserData);
 
         try {
             $accessToken = User::where(
                 'client_id',
                 $this->amoCrmUserData['clientId']
             )->first()->access_token;
+
             if (isset($accessToken)) {
                 $accessToken = json_decode($accessToken);
             }
@@ -82,9 +76,9 @@ class SyncHandler implements RequestHandlerInterface
             $apiClient->setAccessToken($accessToken);
 
             $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
-            $syncHelper->sendToUnisender($contacts);
+//            $syncHelper->sendToUnisender($contacts);
 
-            return new HtmlResponse(json_encode($contacts, JSON_UNESCAPED_UNICODE));
+            return new HtmlResponse('Пользователь уже есть в базе');
         } elseif (!isset($_GET['code'])) {
             $state = bin2hex(random_bytes(16));
             $_SESSION['oauth2state'] = $state;
@@ -114,15 +108,15 @@ class SyncHandler implements RequestHandlerInterface
             $accessToken = $apiClient->getOAuthClient()->getAccessTokenByCode($_GET['code']);
             $apiClient->setAccessToken($accessToken);
 
-            $syncHelper->saveUser($accessToken, $apiClient);
+            $syncHelper->saveUser($apiClient, $accessToken);
         } catch (AmoCRMoAuthApiException $e) {
             exit('Неверный код авторизации, отчистите параметры и перезагрузите страницу');
         }
 
         $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
-        $syncHelper->sendToUnisender($contacts);
-        $syncHelper->subscribe($apiClient);
+//        $syncHelper->sendToUnisender($contacts);
+//        $syncHelper->subscribe($apiClient);
 
-        return new HtmlResponse(json_encode($contacts, JSON_UNESCAPED_UNICODE));
+        return new HtmlResponse('Пользователь сохранен');
     }
 }

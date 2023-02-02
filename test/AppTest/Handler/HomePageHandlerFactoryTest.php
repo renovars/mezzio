@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace AppTest\Handler;
 
 use App\Handler\HomePageHandler;
-use App\Handler\HomePageHandlerFactory;
 use Mezzio\Router\RouterInterface;
 use Mezzio\Template\TemplateRendererInterface;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -39,7 +38,7 @@ class HomePageHandlerFactoryTest extends TestCase
             ->with(RouterInterface::class)
             ->willReturn($this->router);
 
-        $factory  = new HomePageHandlerFactory();
+        $factory  = new \App\Factory\HomePageHandlerFactory();
         $homePage = $factory($this->container);
 
         self::assertInstanceOf(HomePageHandler::class, $homePage);
@@ -65,7 +64,7 @@ class HomePageHandlerFactoryTest extends TestCase
                 $renderer
             );
 
-        $factory  = new HomePageHandlerFactory();
+        $factory  = new \App\Factory\HomePageHandlerFactory();
         $homePage = $factory($this->container);
 
         self::assertInstanceOf(HomePageHandler::class, $homePage);

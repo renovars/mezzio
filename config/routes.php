@@ -40,7 +40,7 @@ use Psr\Container\ContainerInterface;
 return static function (Application $app, MiddlewareFactory $factory, ContainerInterface $container): void {
     $app->get('/', App\Handler\HomePageHandler::class, 'home');
     $app->get('/api/sum', App\Handler\SumHandler::class, 'sum');
-    $app->get('/api/sync', App\Handler\SyncHandler::class, 'sync');
+    $app->get('/api/sync', App\Handler\SafeUserHandler::class, 'sync');
     $app->any('/api/safekey', App\Handler\SafeKeyHandler::class, 'safe-key');
     $app->post('/api/webhooks', \App\Handler\WebhooksHandler::class, 'sync-webhooks');
 };
