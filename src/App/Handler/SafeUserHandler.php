@@ -75,9 +75,6 @@ class SafeUserHandler implements RequestHandlerInterface
 
             $apiClient->setAccessToken($accessToken);
 
-            $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
-//            $syncHelper->sendToUnisender($contacts);
-
             return new HtmlResponse('Пользователь уже есть в базе');
         } elseif (!isset($_GET['code'])) {
             $state = bin2hex(random_bytes(16));
@@ -112,10 +109,6 @@ class SafeUserHandler implements RequestHandlerInterface
         } catch (AmoCRMoAuthApiException $e) {
             exit('Неверный код авторизации, отчистите параметры и перезагрузите страницу');
         }
-
-        $contacts = $syncHelper->getUserContacts($accessToken, $apiClient);
-//        $syncHelper->sendToUnisender($contacts);
-//        $syncHelper->subscribe($apiClient);
 
         return new HtmlResponse('Пользователь сохранен');
     }
