@@ -60,6 +60,7 @@ class SyncHelper
      * @throws \AmoCRM\Exceptions\AmoCRMApiException
      * @throws \AmoCRM\Exceptions\AmoCRMMissedTokenException
      * @throws \AmoCRM\Exceptions\AmoCRMoAuthApiException
+     * @throws \Exception
      */
     public function getUserContacts(): array
     {
@@ -88,9 +89,8 @@ class SyncHelper
         } catch (AmoCRMApiNoContentException $e) {
             return [];
         } catch (AmoCRMoAuthApiException $e) {
-            echo 'Нужна повторная авторизация, обновите страницу';
             $this->deleteToken();
-            return [];
+            throw new AmoCRMoAuthApiException($e);
         }
         return $contactsNameAndEmail;
     }

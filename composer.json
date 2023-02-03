@@ -43,6 +43,7 @@
     },
     "require": {
         "php": "^7.4 || ~8.0.0 || ~8.1.0",
+        "ext-json": "*",
         "amocrm/amocrm-api-library": "^0.12.5",
         "composer/package-versions-deprecated": "^1.10.99",
         "davedevelopment/phpmig": "^1.7",
@@ -55,9 +56,9 @@
         "mezzio/mezzio": "^3.7",
         "mezzio/mezzio-fastroute": "^3.0.3",
         "mezzio/mezzio-helpers": "^5.7",
+        "nesbot/carbon": "^2.66",
         "pimple/pimple": "^3.5",
-        "unisender/api-wrapper": "^1.6",
-        "ext-json": "*"
+        "unisender/api-wrapper": "^1.6"
     },
     "require-dev": {
         "filp/whoops": "^2.7.1",
