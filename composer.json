@@ -57,6 +57,7 @@
         "mezzio/mezzio-fastroute": "^3.0.3",
         "mezzio/mezzio-helpers": "^5.7",
         "nesbot/carbon": "^2.66",
+        "pda/pheanstalk": "^4.0",
         "pimple/pimple": "^3.5",
         "unisender/api-wrapper": "^1.6"
     },

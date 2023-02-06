@@ -1,8 +1,8 @@
 <?php
 
-namespace App\Commands;
+namespace App\Console\Commands;
 
-use Carbon\Carbon;
+use App\Console\Workers\TimeWorker;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -32,8 +32,9 @@ class HowTimeCommand extends Command
      */
     protected function execute(InputInterface $input, OutputInterface $output): int
     {
-        $output->writeln('Now time: ' . Carbon::now()->format('H:i (m.Y)'));
-
+        //Запускаем выполнение задач
+        $worker = new TimeWorker();
+        $worker->process();
         return 0;
     }
 }

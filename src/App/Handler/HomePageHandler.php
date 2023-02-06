@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
+use App\Console\Producers\Producer;
 use Carbon\Carbon;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
@@ -25,7 +26,11 @@ class HomePageHandler implements RequestHandlerInterface
     {
         $target = $request->getQueryParams()['target'] ?? 'World';
         $target = htmlspecialchars($target, ENT_HTML5, 'UTF-8');
-        $target = Carbon::now();
+
+        //Отправляем задачу в очередь
+        $data = Carbon::now()->format('H:i:s (m.Y)');
+        Producer::addToQueue($data, 'times');
+
         return new HtmlResponse(sprintf(
             '<h1>Hello %s</h1>',
             $target

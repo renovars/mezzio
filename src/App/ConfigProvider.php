@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Commands\HowTimeCommand;
+use App\Console\Commands\HowTimeCommand;
 use App\Factory\HomePageHandlerFactory;
 use App\Factory\SafeKeyHandlerFactory;
 use App\Factory\SafeUserHandlerFactory;
 use App\Handler\HomePageHandler;
 use App\Handler\SafeKeyHandler;
-use App\Handler\SumHandler;
 use App\Handler\SafeUserHandler;
+use App\Handler\SumHandler;
 use App\Handler\WebhooksHandler;
 
 /**
