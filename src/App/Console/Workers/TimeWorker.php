@@ -2,41 +2,17 @@
 
 namespace App\Console\Workers;
 
-use Pheanstalk\Pheanstalk;
-
 /**
- * Обработчик задач из очереди times
+ * Воркер очереди times
  */
-class TimeWorker
+class TimeWorker extends BaseWorker
 {
-    /**
-     * Имя просматриваемой очереди
-     */
-    public const QUEUE = 'times';
+    /** Имя просматриваемой очереди */
+    protected string $queue = 'times';
 
-    /**
-     * Обработчик задач из очереди
-     * @return mixed
-     */
-    public function process()
+    /** Обработчик задач из очереди */
+    public function process($data)
     {
-        try {
-            while (true) {
-                //Создаем подключение к очереди
-                $pheanstalk = Pheanstalk::create('localhost')
-                    ->watch(self::QUEUE);
-
-                //Резервируем последнюю задачу
-                $job = $pheanstalk->reserve();
-
-                //Выводим данные задачи
-                echo json_decode($job->getData(), true) . PHP_EOL;
-
-                //Удаляем задачу
-                $pheanstalk->delete($job);
-            }
-        } catch (\Exception $e) {
-            echo $e->getMessage();
-        }
+        echo $data . PHP_EOL;
     }
 }

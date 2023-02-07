@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Factory;
+namespace App\Factories;
 
 use App\Handler\HomePageHandler;
 use Psr\Container\ContainerInterface;

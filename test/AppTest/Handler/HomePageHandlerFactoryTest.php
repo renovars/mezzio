@@ -38,7 +38,7 @@ class HomePageHandlerFactoryTest extends TestCase
             ->with(RouterInterface::class)
             ->willReturn($this->router);
 
-        $factory  = new \App\Factory\HomePageHandlerFactory();
+        $factory  = new \App\Factories\HomePageHandlerFactory();
         $homePage = $factory($this->container);
 
         self::assertInstanceOf(HomePageHandler::class, $homePage);
@@ -64,7 +64,7 @@ class HomePageHandlerFactoryTest extends TestCase
                 $renderer
             );
 
-        $factory  = new \App\Factory\HomePageHandlerFactory();
+        $factory  = new \App\Factories\HomePageHandlerFactory();
         $homePage = $factory($this->container);
 
         self::assertInstanceOf(HomePageHandler::class, $homePage);

@@ -14,11 +14,15 @@ class Producer
      * @param $data
      * @param string $queueName
      * @return void
+     * @throws \Exception
      */
     public static function addToQueue($data, string $queueName)
     {
-        //Отправляем задачу в очередь
-        $job = Pheanstalk::create('localhost', 11300);
-        $job->useTube($queueName)->put(json_encode($data));
+        try {
+            $job = Pheanstalk::create('localhost', 11300);
+            $job->useTube($queueName)->put(json_encode($data));
+        } catch (\Exception $e) {
+            throw new \Exception($e);
+        }
     }
 }
