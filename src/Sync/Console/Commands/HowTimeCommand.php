@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Commands;
+namespace Sync\Console\Commands;
 
 use Carbon\Carbon;
 use Symfony\Component\Console\Command\Command;

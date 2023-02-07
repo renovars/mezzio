@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Factories;
+namespace Sync\Factories\WorkersFactories;
 
-use App\BeanstalkConfig;
-use App\Console\Workers\TimeWorker;
 use Psr\Container\ContainerInterface;
+use Sync\BeanstalkConfig;
+use Sync\Console\Workers\TimeWorker;
 
 /**
  * Фабрика для воркера очереди times

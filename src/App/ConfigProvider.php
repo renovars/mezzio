@@ -4,12 +4,9 @@ declare(strict_types=1);
 
 namespace App;
 
-use App\Console\Commands\HowTimeCommand;
-use App\Console\Workers\TimeWorker;
 use App\Factories\HomePageHandlerFactory;
 use App\Factories\SafeKeyHandlerFactory;
 use App\Factories\SafeUserHandlerFactory;
-use App\Factories\TimeWorkerFactory;
 use App\Handler\HomePageHandler;
 use App\Handler\SafeKeyHandler;
 use App\Handler\SafeUserHandler;
@@ -34,7 +31,6 @@ class ConfigProvider
         return [
             'dependencies' => $this->getDependencies(),
             'templates'    => $this->getTemplates(),
-            'laminas-cli'  => $this->getCliConfig(),
         ];
     }
 
@@ -49,7 +45,6 @@ class ConfigProvider
                 WebhooksHandler::class => WebhooksHandler::class,
             ],
             'factories'  => [
-                TimeWorker::class => TimeWorkerFactory::class,
                 HomePageHandler::class => HomePageHandlerFactory::class,
                 SafeKeyHandler::class  => SafeKeyHandlerFactory::class,
                 SafeUserHandler::class => SafeUserHandlerFactory::class,
@@ -67,19 +62,6 @@ class ConfigProvider
                 'app'    => ['templates/app'],
                 'error'  => ['templates/error'],
                 'layout' => ['templates/layout'],
-            ],
-        ];
-    }
-
-    /**
-     * return cli-commands list
-     */
-    public function getCliConfig(): array
-    {
-        return [
-            'commands' => [
-                'package:how-time' => HowTimeCommand::class,
-                'package:times' => TimeWorker::class,
             ],
         ];
     }

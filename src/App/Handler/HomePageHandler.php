@@ -4,12 +4,13 @@ declare(strict_types=1);
 
 namespace App\Handler;
 
-use App\Console\Producers\Producer;
 use Carbon\Carbon;
 use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
+use Sync\Console\Producers\Producer;
+use Sync\Factories\ProducersFactories\ProducerFactory;
 
 /**
  * Хэндлер домашней страницы
@@ -21,6 +22,7 @@ class HomePageHandler implements RequestHandlerInterface
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
+     * @throws \Exception
      */
     public function handle(ServerRequestInterface $request): ResponseInterface
     {
@@ -29,7 +31,9 @@ class HomePageHandler implements RequestHandlerInterface
 
         //Отправляем задачу в очередь
         $data = Carbon::now()->format('H:i:s (m.Y)');
-        Producer::addToQueue($data, 'times');
+
+        $producer = (new ProducerFactory())->getProducer();
+        $producer->addToQueue($data, 'times');
 
         return new HtmlResponse(sprintf(
             '<h1>Hello %s</h1>',

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Console\Workers;
+namespace Sync\Console\Workers;
 
 /**
  * Воркер очереди times

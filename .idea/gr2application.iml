@@ -6,6 +6,7 @@
       <sourceFolder url="file://$MODULE_DIR$/src/App" isTestSource="false" packagePrefix="App\" />
       <sourceFolder url="file://$MODULE_DIR$/test/AppTest" isTestSource="true" packagePrefix="AppTest\" />
       <sourceFolder url="file://$MODULE_DIR$/tests" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/Sync" isTestSource="false" packagePrefix="Sync\" />
       <sourceFolder url="file://$MODULE_DIR$/test" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/mezzio/mezzio" />
       <excludeFolder url="file://$MODULE_DIR$/vendor/nikic/php-parser" />

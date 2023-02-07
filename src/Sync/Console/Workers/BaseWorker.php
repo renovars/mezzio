@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Console\Workers;
+namespace Sync\Console\Workers;
 
-use App\BeanstalkConfig;
 use Pheanstalk\Contract\PheanstalkInterface;
 use Pheanstalk\Job;
 use Pheanstalk\Pheanstalk;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Sync\BeanstalkConfig;
 
 /**
  * базовый класс для воркеров
@@ -23,7 +23,7 @@ abstract class BaseWorker extends Command
 
     /**
      * Конструктор BaseWorker
-     * @param BeanstalkConfig $beanstalk
+     * @param \Sync\BeanstalkConfig $beanstalk
      */
     final public function __construct(BeanstalkConfig $beanstalk)
     {
