@@ -6,7 +6,9 @@ namespace Sync;
 
 use Sync\Console\Commands\HowTimeCommand;
 use Sync\Console\Workers\TimeWorker;
+use Sync\Factories\HandlersFactories\HomePageHandlerFactory;
 use Sync\Factories\WorkersFactories\TimeWorkerFactory;
+use Sync\Handler\HomePageHandler;
 
 /**
  * The configuration provider for the Sync module
@@ -39,6 +41,7 @@ class ConfigProvider
             ],
             'factories'  => [
                 TimeWorker::class => TimeWorkerFactory::class,
+                HomePageHandler::class => HomePageHandlerFactory::class,
             ],
         ];
     }

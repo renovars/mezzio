@@ -43,4 +43,5 @@ return static function (Application $app, MiddlewareFactory $factory, ContainerI
     $app->get('/api/sync', App\Handler\SafeUserHandler::class, 'sync');
     $app->any('/api/safekey', App\Handler\SafeKeyHandler::class, 'safe-key');
     $app->post('/api/webhooks', \App\Handler\WebhooksHandler::class, 'sync-webhooks');
+    $app->get('/home', \Sync\Handler\HomePageHandler::class, 'home-page');
 };
