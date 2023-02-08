@@ -9,27 +9,28 @@ use Laminas\Diactoros\Response\HtmlResponse;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use Sync\BeanstalkConfig;
+use Sync\config\BeanstalkConfig;
 use Sync\Console\Producers\Producer;
+use Sync\Helpers\UpdateTokensHelper;
 
 /**
  * Хэндлер домашней страницы
  */
 class HomePageHandler implements RequestHandlerInterface
 {
-    /** @var BeanstalkConfig Конфигурация подключения */
+    /** @var \Sync\config\BeanstalkConfig Конфигурация подключения */
     protected BeanstalkConfig $config;
 
     /**
      * Констуктор HomePageHandler
-     * @param BeanstalkConfig $beanstalk
+     * @param \Sync\config\BeanstalkConfig $beanstalk
      */
     public function __construct(BeanstalkConfig $beanstalk)
     {
         $this->config = $beanstalk;
     }
     /**
-     * Возвращает текст приветствия
+     * Возвращает текст приветствия и добавляет задачу в очередь с текущим временем
      *
      * @param ServerRequestInterface $request
      * @return ResponseInterface
@@ -42,7 +43,6 @@ class HomePageHandler implements RequestHandlerInterface
 
         //Отправляем задачу в очередь
         $data = Carbon::now()->format('H:i:s (m.Y)');
-
         $producer = new Producer($this->config);
         $producer->addToQueue($data, 'times');
 

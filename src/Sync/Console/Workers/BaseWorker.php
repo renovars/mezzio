@@ -8,7 +8,7 @@ use Pheanstalk\Pheanstalk;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
-use Sync\BeanstalkConfig;
+use Sync\config\BeanstalkConfig;
 
 /**
  * базовый класс для воркеров
@@ -23,7 +23,7 @@ abstract class BaseWorker extends Command
 
     /**
      * Конструктор BaseWorker
-     * @param \Sync\BeanstalkConfig $beanstalk
+     * @param \Sync\\Sync\config\BeanstalkConfig $beanstalk
      */
     final public function __construct(BeanstalkConfig $beanstalk)
     {
