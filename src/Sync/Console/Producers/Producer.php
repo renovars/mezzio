@@ -3,7 +3,7 @@
 namespace Sync\Console\Producers;
 
 use Pheanstalk\Pheanstalk;
-use Sync\BeanstalkConfig;
+use Sync\config\BeanstalkConfig;
 
 /**
  * Помещает задачи в очередь

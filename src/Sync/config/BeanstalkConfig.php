@@ -1,6 +1,6 @@
 <?php
 
-namespace Sync;
+namespace Sync\config;
 
 use Pheanstalk\Pheanstalk;
 use Psr\Container\ContainerExceptionInterface;

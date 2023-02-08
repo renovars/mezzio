@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 return [
     'beanstalk' => [
-        'host'     => 'localhost',
+        'host'     => "application-beanstalkd",
         'port' => 11300,
         'timeout'  => 10,
     ],

@@ -3,7 +3,7 @@
 namespace Sync\Factories\WorkersFactories;
 
 use Psr\Container\ContainerInterface;
-use Sync\BeanstalkConfig;
+use Sync\config\BeanstalkConfig;
 use Sync\Console\Workers\TimeWorker;
 
 /**

@@ -5,7 +5,9 @@ declare(strict_types=1);
 namespace Sync;
 
 use Sync\Console\Commands\HowTimeCommand;
+use Sync\Console\Commands\UpdateCommand;
 use Sync\Console\Workers\TimeWorker;
+use Sync\Factories\CommandsFactories\UpdateCommandFactory;
 use Sync\Factories\HandlersFactories\HomePageHandlerFactory;
 use Sync\Factories\WorkersFactories\TimeWorkerFactory;
 use Sync\Handler\HomePageHandler;
@@ -42,6 +44,7 @@ class ConfigProvider
             'factories'  => [
                 TimeWorker::class => TimeWorkerFactory::class,
                 HomePageHandler::class => HomePageHandlerFactory::class,
+                UpdateCommand::class => UpdateCommandFactory::class,
             ],
         ];
     }
@@ -55,6 +58,7 @@ class ConfigProvider
             'commands' => [
                 'package:how-time' => HowTimeCommand::class,
                 'package:times' => TimeWorker::class,
+                'update-command' => UpdateCommand::class,
             ],
         ];
     }
