@@ -131,14 +131,17 @@ class SyncHelper
      */
     public function sendToUnisender(array $contacts)
     {
-        $importParams = [
-            'field_names' => ['email', 'Name'],
-            'data' => $contacts,
-        ];
+        $chunkContacts = array_chunk($contacts, 500);
+        foreach ($chunkContacts as $contacts) {
+            $importParams = [
+                'field_names' => ['email', 'Name'],
+                'data' => $contacts,
+            ];
 
-        $uni = new UnisenderApi($this->apiKey);
-        $unisenderResponse = $uni->importContacts($importParams);
-        file_put_contents(LOG_FILE, date("Y-m-d H:i:s") . $unisenderResponse, FILE_APPEND);
+            $uni = new UnisenderApi($this->apiKey);
+            $unisenderResponse = $uni->importContacts($importParams);
+            file_put_contents(LOG_FILE, date("Y-m-d H:i:s") . $unisenderResponse, FILE_APPEND);
+        }
     }
 
     /**
