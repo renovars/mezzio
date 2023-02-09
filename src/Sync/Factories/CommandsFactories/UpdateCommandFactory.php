@@ -18,7 +18,7 @@ class UpdateCommandFactory
      */
     public function __invoke(ContainerInterface $container): UpdateCommand
     {
-        $DBConnection = new DataBaseConnection($container);
+        $DBConnection = DataBaseConnection::getConnection($container);
         return new UpdateCommand($DBConnection);
     }
 }

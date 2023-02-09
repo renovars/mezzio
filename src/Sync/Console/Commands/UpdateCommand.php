@@ -17,6 +17,8 @@ class UpdateCommand extends Command
     /** @var string Имя команды */
     protected static $defaultName = 'update-command';
 
+    protected static $defaultDescription = 'update tokens';
+
     /** @var DataBaseConnection|null подключение к БД */
     protected ?DataBaseConnection $DBConnecton = null;
 
